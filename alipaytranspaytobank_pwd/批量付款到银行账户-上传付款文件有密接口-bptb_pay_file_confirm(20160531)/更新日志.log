@@ -1,0 +1,90 @@
+---------------接口技术文档---------------
+
+
+版本号：V2.1
+基础版本号：V2.0
+修改时间：2015-2-6
+区别： 
+1、“8.2 接入错误码”中新增错误码：MAX_VISIT_LIMIT	超出最大访问限制
+
+版本号：V2.2 
+基础版本号：V2.1
+修改时间：2015-3-24
+区别： 
+1、“6.1 通知触发条件”删除bptb_unfreeze_notify批次余额不足通知。 
+2、“8.1 批量付款业务错误码”中删除以下错误码：USER_REGISTER_EMAIL、ILLEGAL_DIGEST_TYPE、BATCH_PAY_TO_BANK、STATE_SHOULD_T、FILE_NAME_NULL、ZIP_INFILE_NULL、FORMULA_FORMAT_ERROR、UPLOAD_USER_ID_NULL、USER_NOT_EXIST、USER_BLOCK_STATUS。 
+3、“8.1 批量付款业务错误码”中新增： 
+PARTNER_SESSION_TIMEOUT	抱歉，接口请求超时 
+PARTNER_NOT_MATCH	抱歉，你操作的商户与接口请求不匹配 
+UPLOAD_FILE_NAME_IS_NULL	上传的文件名称为空 
+UPLOAD_FILE_NAME_ILLEGAL	上传文件的文件名非法，请修改后重试。 
+EXTEND_PARAM_LENGTH_LIMIT	业务扩展属性过长，请修改后重试。 
+ERROR_SELF_CERTIFY_LEVEL_LIMIT	您暂时无法使用此功能，请立即补全您的认证信息 
+PAY_ACCOUNT_STATUS_ERROR	抱歉，您上传文件中的付款账户状态异常 
+PUBLIC_DAILY_QUOTA_LIMIT_EXCEED	对公日限额超限 
+PRIVATE_DAILY_QUOTA_LIMIT_EXCEED	对私日限额超限 
+TOTAL_COUNT_NOT_MATCH	总笔数与明细汇总笔数不一致 
+TOTAL_AMOUNT_NOT_MATCH	总金额与明细汇总金额不一致 
+DETAIL_OUT_BIZ_NO_REPEATE	同一批次中商户流水号重复
+
+版本号：V2.3 
+基础版本号：V2.2
+修改时间：2015-5-22
+区别： 
+1、“8.1 批量付款业务错误码”中新增： 
+PAYER_ACCOUNT_IS_RELEASED	付款人登录账号存在多个重复账户，无法确认唯一
+
+版本号：V2.4 
+基础版本号：V2.3
+修改时间：2015-6-10
+区别： 
+1、“8.1 批量付款业务错误码”中新增： 
+BUSINESS_TYPE_NOT_SIGNED	未签约该批量代发类型 
+2、修改“7.2.1 MD5签名”固定文案
+
+版本号：V2.5
+基础版本号：V2.4
+修改时间：2016-4-6
+区别： 
+1、“4.3  付款文件说明”的“备注”参数新增说明：当付款方为企业账户，且转账金额达到（大于等于）50000元，备注不能为空。
+
+版本号：V2.6
+基础版本号：V2.5
+修改时间：2016-5-23
+区别： 
+1、“8.1  批量付款业务错误码”新增：
+PERMIT_PAYER_L1_FORBIDDEN	根据监管部门的要求，当前余额支付额度仅剩XX元，请尽快完善身份信息提升额度
+PERMIT_PAYER_L2_L3_FORBIDDEN	根据监管部门的要求，您今日余额支付额度仅剩XX元，今年余额支付额度仅剩XX元
+PERMIT_CHECK_PERM_AML_DATA_INCOMPLETE	由于您的资料不全，付款受限
+PERMIT_CHECK_PERM_AML_CERT_EXPIRED	由于您的证件过期，付款受限
+PERMIT_CHECK_PERM_AML_CERT_MISS_4_TRANS_LIMIT	您的账户收付款额度超限
+PERMIT_CHECK_PERM_AML_CERT_MISS_4_ACC_LIMIT	为了保证您的资金安全，请尽快完成信息补全
+PERMIT_CHECK_PERM_IDENTITY_THEFT	您的账户存在身份冒用风险，请进行身份核实解除限制
+PERMIT_CHECK_PERM_LIMITED_BY_SUPERIOR	根据监管部门的要求，请补全您的身份信息解除限制
+PERMIT_CHECK_PERM_ACCOUNT_NOT_EXIST	根据监管部门的要求，请补全您的身份信息，开立余额账户
+PERMIT_CHECK_PERM_INSUFFICIENT_ACC_LEVEL	根据监管部门的要求，请完善身份信息解除限制
+
+版本号：V2.7
+基础版本号：V2.6
+修改时间：2016-5-31
+区别： 
+1、“4.3 付款文件说明”的“付款文件样例如下”新增“建议填写完整的省、市、支行信息”红字内容。
+
+---------------规则文档---------------
+
+
+版本号：V1.2
+基础版本号：V1.1
+修改时间：2014-05-20
+区别： 
+1、修改“3 技术接入规则”，接口构造：   “form表单的method属性，仅支持post”；
+2、修改“3 技术接入规则”，数据传输：   “必须使用https协议，仅支持post方式提交”；
+3、修改“4 接口使用规则”，业务操作：   明确幂等性控制字段，第1和第2条规范点“批次号”改为“付款文件名（忽略后缀）”。
+
+版本号：V1.3 
+基础版本号：V1.2 
+修改时间：2015-10-27 
+区别： 
+1、“4 接口使用规则”的“接口异常”类型中新增一条规范： 
+规范点：如果用“批量付款到银行账户-文件查询接口(bptb_file_query)”查询到批次状态为DEALING（处理中）（如：付款时账户余额不足）时，请在第二天再次使用查询接口查询，来确认该批次是作废还是成功，以便做后续的业务处理。 
+原因：当批次为DEALING（处理中）状态时，支付宝会平均以8分钟/次的频率进行重试处理，直到当日24:00后停止。如果还未处理成功，则DEALING状态会自动转变为FAIL（失败）。
